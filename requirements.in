@@ -1,3 +1,4 @@
+aiosqlite==0.20.0
 alembic==1.13.1
 fastapi==0.110.1
 mypy==1.9.0
