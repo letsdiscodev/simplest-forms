@@ -1,0 +1,15 @@
+{
+    "version": "1.0",
+    "services": {
+        "web": {
+            "volumes": [{
+                "name": "simple-forms-data",
+                "destinationPath": "/data"
+            }]
+        },
+        "hook:deploy:start:before": {
+            "type": "command",
+            "command": "alembic upgrade head"
+        }
+    }
+}
