@@ -9,7 +9,11 @@
         },
         "hook:deploy:start:before": {
             "type": "command",
-            "command": "alembic upgrade head"
+            "command": "alembic upgrade head",
+            "volumes": [{
+                "name": "simple-forms-data",
+                "destinationPath": "/data"
+            }]
         }
     }
 }
