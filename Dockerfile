@@ -8,5 +8,6 @@ COPY requirements.txt /app/
 ADD alembic.ini /app/alembic.ini
 RUN pip install -r requirements.txt
 ADD simplestforms /app/simplestforms
+ADD alembic /app/alembic
 RUN pip install -e .
 CMD ["uvicorn", "simplestforms.app:app", "--port", "8000", "--host", "0.0.0.0"]
