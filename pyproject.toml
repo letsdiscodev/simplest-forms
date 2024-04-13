@@ -1,0 +1,21 @@
+[project]
+name = "simplestforms"
+dynamic = ["version"]
+
+[tool.setuptools]
+packages = ["simplestforms"]
+
+[tool.setuptools.dynamic]
+version = {attr = "simplestforms.__version__"}
+
+[project.scripts]
+disco_worker = "disco.worker:main"
+disco_init = "disco.scripts.init:main"
+disco_update = "disco.scripts.update:main"
+
+[tool.ruff.lint]
+# Enable the isort rules.
+extend-select = ["I"]
+
+[tool.mypy]
+ignore_missing_imports = true
