@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Annotated
 from urllib.parse import parse_qsl
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Path, Query, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession as AsyncDBSession
 
@@ -32,36 +32,38 @@ async def root_get():
     return "Simplest Forms"
 
 
-@app.post("/")
+@app.post("/{form}")
 async def root_post(
     dbsession: Annotated[AsyncDBSession, Depends(get_async_db)],
+    form: Annotated[str, Path()],
     redirect_to: Annotated[str, Query()],
     x_forwarded_for: Annotated[str, Header()],
     request: Request,
 ):
-    log.info("Saving submission from %s", x_forwarded_for)
+    log.info("Saving submission for %s from %s", form, x_forwarded_for)
     body_bytes = await request.body()
     try:
         body_text = body_bytes.decode("utf-8")
     except UnicodeDecodeError:
         raise HTTPException(status_code=422)
     fields = parse_qsl(body_text)
-    form: dict[str, str | list[str]] = {}
+    content: dict[str, str | list[str]] = {}
     for name, value in fields:
-        if name in form:
-            old_val = form[name]
+        if name in content:
+            old_val = content[name]
             if isinstance(old_val, list):
                 new_val = old_val + [value]
             else:
                 new_val = [old_val, value]
-            form[name] = new_val
+            content[name] = new_val
         else:
-            form[name] = value
+            content[name] = value
     submission = FormSubmission(
         id=uuid.uuid4().hex,
         created=datetime.now(timezone.utc),
         client_addr=x_forwarded_for,
-        content=form,
+        form=form,
+        content=content,
     )
     dbsession.add(submission)
     return RedirectResponse(url=redirect_to, status_code=302)

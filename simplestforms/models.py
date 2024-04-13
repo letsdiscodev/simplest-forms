@@ -30,6 +30,7 @@ class FormSubmission(Base):
     id: Mapped[str] = mapped_column(primary_key=True)
     created: Mapped[datetime] = mapped_column(index=True)
     client_addr: Mapped[str] = mapped_column(index=True)
+    form: Mapped[str] = mapped_column(index=True)
     content: Mapped[dict[str, Any]]
 
     def __repr__(self) -> str:
