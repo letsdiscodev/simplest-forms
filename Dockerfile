@@ -5,7 +5,7 @@ RUN pip install uv
 WORKDIR /app
 COPY pyproject.toml /app/
 COPY requirements.txt /app/
-# ADD alembic.ini /app/alembic.ini
+ADD alembic.ini /app/alembic.ini
 RUN pip install -r requirements.txt
 ADD simplestforms /app/simplestforms
 RUN pip install -e .
